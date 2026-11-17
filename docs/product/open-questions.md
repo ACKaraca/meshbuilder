@@ -1,0 +1,25 @@
+# Open questions
+
+Behaviors that need verification and design decisions not yet settled. Each entry names the
+capabilities it affects and what closes it.
+
+| ID | Question | Capabilities affected | Closed by |
+|---|---|---|---|
+| OQ-01 | Should the native up axis be Z (consistent with the other Arc products) or Y (common in character and game pipelines), given that interchange converts either way? The current decision is Z-up. | MB-IO-001, MB-SCENE-002, MB-PROJ-012 | Pipeline trials with glTF, USD and FBX round trips; confirm no rig or animation data degrades through axis conversion. |
+| OQ-02 | Which scheme generates component identifiers for new elements so that results are deterministic and compact, and what is the memory cost on meshes of ten million faces? | MB-MOD-006, MB-SCENE-024, MB-ATTR-019 | Prototype in `meshbuilder-model` with measured memory and evaluation overhead against the budget in [ADR-0002](../adr/0002-stable-component-identity.md). |
+| OQ-03 | How far does UDIM editing extend: tile-aware unfold and pack across hundreds of tiles, and tile-aware painting performance? | MB-UV-017, MB-UV-023, MB-UV-024 | Test corpus with 100+ tile assets; agreed limits written into the behavior cells. |
+| OQ-04 | Which texel-density workflow is expected by users: per-shell matching only, or also per-object target tables enforced at export? | MB-UV-022, MB-IO-006 | User interviews with game-asset artists; decision recorded in the UV area. |
+| OQ-05 | Which parts of the OpenPBR parameter set can the real-time viewport reproduce, and which must be listed as approximations? | MB-LOOK-001, MB-LOOK-026, MB-RENDER-001 | Image comparison between viewport and RenderBuilder over a reference material set. |
+| OQ-06 | Are Open Shading Language nodes supported by RenderBuilder on the GPU path, and what viewport fallback is acceptable? | MB-LOOK-009 | RenderBuilder decision on shading-language support. |
+| OQ-07 | Which OpenColorIO configuration ships as default, and how are configurations older than the current major version handled? | MB-PROJ-001, MB-PROJ-007 | Color-management review against the suite color policy. |
+| OQ-08 | How much USD authoring depth is needed in phase 4: are inherits, specializes and opinion-strength editing required for first production use? | MB-USD-013, MB-USD-018 | Feedback from the W06 acceptance run with a pipeline partner. |
+| OQ-09 | How should native constructs that USD cannot express (modifier stacks, geometry graphs, rigs) be preserved on USD export: custom schemas, a sidecar `.meshb` reference, or baked results only? | MB-IO-012, MB-USD-012, MB-USD-020 | Decision in [scene-and-usd.md](../architecture/scene-and-usd.md) after a prototype of each option. |
+| OQ-10 | Is out-of-process Python fast enough for interactive tools that query evaluated geometry every frame, or is a shared-memory transport needed? | MB-SCRIPT-006, MB-SCRIPT-009 | Benchmark of the automation protocol with large geometry payloads; reopens the no-embedding decision if missed. |
+| OQ-11 | Can WebAssembly plug-in nodes meet the evaluation budget of built-in nodes, and how is determinism enforced for floating-point code? | MB-GRAPH-031, MB-MOD-040, MB-SCRIPT-014 | Prototype of a plug-in modifier with timing and cross-machine hash comparison. |
+| OQ-12 | What editing is possible on Gaussian-splat point data beyond display, placement, cropping and render hand-off? | MB-SCENE-006, MB-IO-022 | Review of the splat ecosystem and RenderBuilder support. |
+| OQ-13 | What is the protocol and update granularity for live sessions with other running Arc products? | MB-ASSET-014 | Arc Scene contract extension agreed with ArchBuilder and SolidBuilder. |
+| OQ-14 | Retopology, viewport preview capture and timeline settings are specified both in this set and in the reserved areas (MB-TOPO-013 and MB-TOPO-017 versus MB-SCULPT-043 and MB-SCULPT-044; MB-RENDER-005 versus MB-ANIM-046; MB-PROJ-010 versus the timeline object in ANIM). Which rows own each behavior? | MB-TOPO-013, MB-TOPO-017, MB-RENDER-005, MB-PROJ-010 | Review of both sets; the non-owning rows are rewritten as references or withdrawn. |
+| OQ-15 | Which mesh-boolean robustness level is achievable natively for open, self-intersecting and coplanar inputs without a voxel fallback? | MB-TOPO-001, MB-TOPO-004, MB-TOPO-005 | Boolean regression corpus with pass criteria. |
+| OQ-16 | How large can the frame cache be by default, and should it spill to disk? | MB-SCENE-038 | Memory measurements on reference character and effects scenes. |
+| OQ-17 | Is the tick resolution for time (705,600,000 per second) sufficient for sub-frame simulation sampling at high frame rates without drift? | MB-PROJ-010, MB-SCENE-038 | Analysis in [evaluation.md](../architecture/evaluation.md) with simulation substep tests. |
+| OQ-18 | Which FBX conversion component can be used under the dependency policy, and is the bridge process acceptable to users? | MB-IO-010 | License review per [ADR-0004](../adr/0004-fbx-through-isolated-bridge.md). |
