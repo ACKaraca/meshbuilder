@@ -81,8 +81,10 @@ in `arc-suite`; change it there first.
 - Storage is metres, radians, Z-up; time is integer ticks at 705,600,000 per second.
 - `.meshb` is the authority; USD stages are hosted and edited through commands; native content is
   exported to USD as evaluated results (ADR-0003).
-- Never link a path tracer; render through the Arc Scene contract. Never link an FBX library; use the
-  bridge process (ADR-0004).
+- Never link a path tracer; render through the Arc Scene contract. Other renderers run as Hydra
+  render delegates in a separate process (ADR-0007).
+- FBX uses an open reader behind `arc-io-mesh`; never link a vendor FBX library, use the separate
+  bridge process (ADR-0004). Connectors exchange the Arc exchange package and never load in process.
 - Documents never contain code that runs on open.
 - Dense data is stored as chunked package assets (ADR-0006).
 - Every importer bounds input and produces a loss report.

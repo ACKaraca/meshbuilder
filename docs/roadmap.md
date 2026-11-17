@@ -6,7 +6,8 @@ complete when its exit criteria pass.
 
 MeshBuilder starts in suite phase 4 (visualization and content), after `arc-core` L0–L6 exist and
 RenderBuilder's path tracer can consume an Arc Scene. Sculpting, effects, motion capture and
-collaboration depth follow in phase 5.
+collaboration depth, exchange with other applications, third-party renderers, sequencing and
+compositing follow in phase 5.
 
 | Milestone | Suite phase | Theme |
 |---|---|---|
@@ -18,6 +19,7 @@ collaboration depth follow in phase 5.
 | M6 | 5 | Sculpting, texture painting and baking |
 | M7 | 5 | Motion capture, dynamics, effects and motion graphics |
 | M8 | 5 | Depth and scale: collaboration, plug-ins, advanced modeling |
+| M9 | 5 | Connectors, other renderers, sequencing and compositing |
 
 ## M1. Scene, viewport and polygon core
 
@@ -111,7 +113,7 @@ booleans, simplification), `arc-geom` (curves, NURBS, planar regions), `arc-solv
 **Scope.** [20-rigging](product/capabilities/20-rigging.md), [21-skinning-and-deformation](product/capabilities/21-skinning-and-deformation.md),
 [22-keyframe-animation](product/capabilities/22-keyframe-animation.md) and
 [23-nonlinear-animation-and-layers](product/capabilities/23-nonlinear-animation-and-layers.md)
-rows planned for phase 4; MB-IO-010, MB-IO-019 (FBX bridge and point caches as available).
+rows planned for phase 4; MB-IO-010, MB-IO-019 (FBX through an open reader, and point caches as available).
 
 **Dependencies.** M2 evaluation graph and frame cache. `arc-core`: `arc-nodes` (rig nodes),
 `arc-solve`. Other products: none.
@@ -200,3 +202,28 @@ tracking and multi-user editing (suite phase 5).
   [W14](product/workflows.md#w14-studio-tool-and-configuration-roll-out) including the plug-in pass.
 - Two users edit different objects of one document through Hub; a conflicting edit to the same
   object keeps both versions for comparison.
+
+## M9. Connectors, other renderers, sequencing and compositing
+
+**Goal.** Exchange scenes with other content-creation applications, render through other renderers
+and finish shots without leaving the document.
+
+**Scope.**
+- Connectors: [30-application-connectors](product/capabilities/30-application-connectors.md)
+  (MB-CONNECT-001 to MB-CONNECT-022); MB-IO-026; MB-LOOK-027
+- Other renderers: MB-RENDER-022 to MB-RENDER-030
+- Finishing: [31-sequencing-and-compositing](product/capabilities/31-sequencing-and-compositing.md)
+  (MB-COMP-001 to MB-COMP-024, MB-DRAW2D-001 to MB-DRAW2D-012)
+
+**Dependencies.** M4 animation, M3 rendering and interchange, M5 pipeline. `arc-core`: the Arc
+exchange package reader and writer
+([specification](https://github.com/ACKaraca/arc-core/blob/main/docs/architecture/interchange.md)),
+`arc-nodes` for compositing graphs. Other products: the `arc-connectors` repository (suite
+[ADR-0017](https://github.com/ACKaraca/arc-suite/blob/main/docs/adr/0017-exchange-connectors-and-licensed-bridges.md)),
+RenderBuilder for pass output.
+
+**Exit criteria.**
+- [W15](product/workflows.md#w15-round-trip-with-another-content-creation-application) and
+  [W16](product/workflows.md#w16-finish-a-shot-sequence-and-composite) pass.
+- A delegate crash injected during an interactive session ends only that session.
+- Exchange packages from each supported host round-trip with identical identifier maps.

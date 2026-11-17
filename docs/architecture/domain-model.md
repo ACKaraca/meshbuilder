@@ -52,6 +52,23 @@ the `arc-doc` store with stable 128-bit identifiers and change only through comm
 | Render settings | Resolution, frame range, camera, outputs, passes, quality preset | One default plus per render setup |
 | Render setup | Collections included or excluded, overrides (target property, absolute or relative value), passes | Applies to scene objects and render settings |
 
+### Exchange and external renderers
+
+| Type | Key properties | Relationships |
+|---|---|---|
+| Connector link | Host application and version, host identifier per object, document id per object, last synchronized state hash | Keyed by host identifiers; stored with the document; used by round-trip merge |
+| Live link session | Connector endpoint, direction, content filter, state | Runs against one connector link; its changes arrive as transactions |
+| Render delegate | Name, version, declared settings schema, supported pass types | Selected by viewport panes and render settings; runs in a separate process |
+
+### Sequencing, compositing and drawing
+
+| Type | Key properties | Relationships |
+|---|---|---|
+| Edit sequence | Frame rate, resolution, tracks, markers | Contains clips and transitions; may mirror the shot list |
+| Clip | Source, in and out points, position, speed, transform, opacity, blend mode | Refers to media, a shot or a composite; media references use the asset path rules |
+| Compositing graph | Nodes, links, color space | Input from render passes and clips; output offered as a clip |
+| Drawing object | Layers, frames with exposure, placement | Scene object; stroke data stored as chunked assets |
+
 ### References and assembly
 
 | Type | Key properties | Relationships |
@@ -117,6 +134,8 @@ erDiagram
 11. Time is stored as integer ticks at 705,600,000 per second; frame numbers are derived from the
     rational frame rate.
 12. A document contains no executable code that runs on open.
+13. Content from another application, a render delegate or a bridge enters the document only through
+    a validated command in a transaction; none of them runs in the application process.
 
 ## Identity rules
 
@@ -127,6 +146,7 @@ erDiagram
 | Referenced object | Reference id plus target object id | Reloads and replacements where the target id exists |
 | Imported object | Document id plus stored source identifier (USD prim path, glTF node index path, FBX unique id, Alembic object path) | Reimport of an updated source |
 | Arc Scene linked element | Source product's stable element id | Source updates |
+| Connector-linked object | Document id plus the host identifier stored in the connector link | Repeated exchanges, renames on either side, live link sessions |
 
 Names are labels. Uniqueness of names is enforced only among siblings, for readable paths in scripts
 and exports.
@@ -144,6 +164,9 @@ and exports.
 | Collection membership (explicit or rule) | Collection instances, render setups, boolean and scatter operands using the collection |
 | Time | Only nodes that declare time dependency (animated properties, simulation zones, time-reading nodes, cache readers) and their downstream nodes |
 | Document reference reload | Referenced objects, then overrides reapplied, then dependents |
+| Connector package import or live link change | Mapped objects, then dependents; objects changed on both sides wait for the merge choice |
+| Clip source or shot change | The clip's cached frames and the sequence output; a shot clip is marked out of date |
+| Render pass file or compositing parameter | The affected nodes and their downstream frames in the composite cache |
 | Stage layer edit | Prims composed from the edited layer, then dependents |
 | Unit display setting | Nothing in the model; only UI formatting |
 

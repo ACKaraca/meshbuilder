@@ -10,9 +10,10 @@ Decisions specific to MeshBuilder. Suite-wide decisions are recorded in the
 | [0001](0001-modifier-stack-as-graph-view.md) | The modifier stack is a view of the geometry graph | Accepted |
 | [0002](0002-stable-component-identity.md) | Stable component identity for non-destructive editing | Accepted |
 | [0003](0003-native-document-with-usd-interchange.md) | Native document as authority, OpenUSD as assembly and interchange | Accepted |
-| [0004](0004-fbx-through-isolated-bridge.md) | FBX through an isolated bridge process | Accepted |
+| [0004](0004-fbx-through-isolated-bridge.md) | FBX through an open reader, with a vendor library only in a separate process | Accepted (revised) |
 | [0005](0005-time-as-evaluation-input-and-frame-cache.md) | Time as an evaluation input and a revision-aware frame cache | Accepted |
 | [0006](0006-dense-geometry-as-chunked-assets.md) | Dense geometry and sculpt data as chunked package assets | Accepted |
+| [0007](0007-third-party-renderers-as-out-of-process-delegates.md) | Third-party renderers as out-of-process Hydra render delegates | Accepted |
 
 ## Template
 
