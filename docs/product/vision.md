@@ -30,6 +30,7 @@ no account.
 | Effects artist | Simulations and procedural effects baked to Alembic, OpenVDB or USD caches |
 | Look-development and lighting artist | MaterialX/OpenPBR material libraries, lit shots rendered through RenderBuilder |
 | Visualization artist | Rendered stills and sequences of models linked from ArchBuilder, SolidBuilder and CivilBuilder |
+| Shot finisher | Edited and composited shots with audio, ready for review |
 | Pipeline technical director | Scripts, plug-ins, graph assets, headless conversion and validation jobs |
 
 ## Product principles
@@ -57,22 +58,21 @@ development, lights and cameras, viewport rendering and RenderBuilder integratio
 assembly, references and asset management, interchange, scripting and plug-ins, customization,
 color management, rigging, skinning and deformation, keyframe and nonlinear animation, motion
 capture, sculpting, texture painting and baking, dynamics, particles, fluids and volumes, motion
-graphics and crowds.
+graphics and crowds, exchange with other content-creation applications through connectors and live
+links, third-party renderers through out-of-process Hydra render delegates, a sequence editor and a
+node compositor for finishing shots, and drawing-based 2D animation in the 3D scene.
 
 ## Non-goals
 
 | Non-goal | Reason |
 |---|---|
-| A built-in production path tracer | Rendering is RenderBuilder's job through the Arc Scene contract; one renderer is maintained for the suite and crashes stay isolated. |
-| In-process third-party renderer plug-ins | They would require native plug-ins and break crash isolation; other renderers consume the exported USD stage (MB-RENDER-021). |
+| A built-in production path tracer | Rendering is RenderBuilder's job through the Arc Scene contract; one renderer is maintained for the suite and crashes stay isolated. Other renderers run as out-of-process render delegates (MB-RENDER-022). |
 | Architectural object families (walls, doors, windows, stairs, railings) | Building elements belong to ArchBuilder and arrive through Arc Scene links (MB-ASSET-011) with their semantics intact. |
 | Legacy surface representations (patch grids, triangle-only editable meshes, legacy hierarchical subdivision surfaces) | Polygon meshes with subdivision and NURBS cover the same results with one code path; imports convert them. |
-| Video sequencing and image compositing | Separate disciplines with dedicated open tools; renders and captures export as standard image sequences and edit lists. |
-| 2D drawing-based animation in the 3D scene | A distinct medium; not required by the target deliverables. Reconsidered if the user base demands it. |
-| Closed procedural material archives that need a proprietary runtime | No published specification; materials exchange as MaterialX with baked textures (MB-LOOK-015). |
+| Procedural material archives without a published specification or open runtime | Decoding them would need reverse engineering; they are read through a connector in the application that owns them (MB-CONNECT-021) or exchanged as MaterialX with baked textures (MB-LOOK-015). |
 | Cloud-only generative services as built-in features | Conflicts with offline, account-free operation; the assistant panel uses user-configured providers only. |
-| Native (dynamic library) plug-ins and embedded interpreters | Ambient authority and crash risk; extensions use the automation protocol and sandboxed WebAssembly. |
-| Reading other applications' proprietary native scene files | No published specification; those scenes are exchanged through USD, FBX, Alembic and glTF. |
+| Native (dynamic library) plug-ins and embedded interpreters | Ambient authority and crash risk; extensions use the automation protocol and sandboxed WebAssembly. Renderers and bridges run as separate processes, never loaded in process. |
+| Reverse engineering undocumented formats or binaries, and running protected script files of other applications | The legal line: no published specification and no license to decode. Native scene files are exchanged through connectors that use the host application's public API (MB-CONNECT-001), open readers (MB-IO-026) and USD, FBX, Alembic and glTF. |
 
 ## Positioning
 
@@ -97,6 +97,14 @@ motion-capture editing, simulation and scene assembly.
 - **Modeling, sculpting, texturing, animation and motion-capture editing in one application** on one
   document, so hand-offs do not lose rigs, layers or history.
 - **Vendor-neutral GPU** and identical features on Windows, macOS and Linux (MB-VIEW-010).
+- **Exchange with other applications' scenes**: connectors running inside the other application
+  carry hierarchy, meshes, materials, rigs, skinning and animation with identifiers that survive
+  repeated round trips, and live link sessions where the public API allows (MB-CONNECT-001,
+  MB-CONNECT-013, MB-CONNECT-016).
+- **Any Hydra renderer**, crash isolated in its own process, selectable per viewport and for final
+  frames (MB-RENDER-022, MB-RENDER-024, MB-RENDER-025).
+- **Shot finishing in the same document**: sequence editor, pass-based compositor and drawing
+  animation (MB-COMP-001, MB-COMP-015, MB-DRAW2D-001).
 - **Live links to ArchBuilder, SolidBuilder and CivilBuilder models** for visualization with
   refinements that survive source updates (MB-ASSET-011 to MB-ASSET-014).
 - **Safe documents**: no code runs on open (MB-SCRIPT-010); plug-ins are sandboxed with explicit

@@ -3,7 +3,9 @@
 Import and export of scene, geometry, cache and point formats, with axis and unit conversion, presets,
 validation and loss reports. Fidelity levels per format and direction are listed in
 [interoperability.md](../../architecture/interoperability.md); OpenUSD stage work is in
-[14-scene-assembly-and-usd.md](14-scene-assembly-and-usd.md).
+[14-scene-assembly-and-usd.md](14-scene-assembly-and-usd.md). Native scene files of other
+content-creation applications are exchanged through connectors
+([30-application-connectors.md](30-application-connectors.md)).
 
 ## Domain objects
 
@@ -32,7 +34,7 @@ validation and loss reports. Fidelity levels per format and direction are listed
 | ID | Capability | Behavior | Tier | Phase |
 |---|---|---|---|---|
 | MB-IO-009 | glTF 2.0 | Imports and exports glTF and GLB: hierarchy, meshes, PBR materials mapped to OpenPBR, textures, cameras, punctual lights, skins, morph targets, animation clips, instancing and mesh compression extensions. | T1 | 4 |
-| MB-IO-010 | FBX | Imports and exports FBX scenes (hierarchy, meshes with smoothing and normals, materials, cameras, lights, skins, blend shapes, animation takes) through an isolated conversion process; FBX is never required for a core workflow. | T2 | 4 |
+| MB-IO-010 | FBX | Imports and exports FBX scenes (hierarchy, meshes with smoothing and normals, materials, cameras, lights, skins, blend shapes, animation takes) through an open reader and writer in process behind `arc-io-mesh`; a vendor conversion library, when the user has installed and licensed one, runs only in a separate bridge process (MB-CONNECT-019). FBX is never required for a core workflow. | T2 | 4 |
 | MB-IO-011 | OBJ | Imports and exports OBJ with MTL materials, groups, smoothing groups, multiple objects and vertex colors where present. | T1 | 4 |
 | MB-IO-012 | USD export of native scenes | Exports the native scene or a selection to USD (text, binary or USDZ) with hierarchy, instancing, materials, lights, cameras, animation, skeletons and blend shapes, and variant sets from material and object variants. | T1 | 4 |
 | MB-IO-013 | Collada | Imports Collada scenes for legacy assets at view fidelity. | T3 | 5 |
@@ -58,3 +60,9 @@ validation and loss reports. Fidelity levels per format and direction are listed
 |---|---|---|---|---|
 | MB-IO-024 | Game-ready export | Exports meshes with LOD groups, collision proxies by naming rule, sockets as empties, and animation clips per action or clip track, with triangulation and tangent options. | T2 | 4 |
 | MB-IO-025 | Texture export settings | Converts and resizes textures on export (format, bit depth, channel packing, max size) according to the preset. | T2 | 4 |
+
+## Open readers
+
+| ID | Capability | Behavior | Tier | Phase |
+|---|---|---|---|---|
+| MB-IO-026 | Open-reader formats | Reads further proprietary formats for which a permissively licensed open reader or a published specification exists (for example 3DM) natively behind an `arc-io-*` crate, at data fidelity with a loss report. | T3 | 5 |

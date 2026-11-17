@@ -128,6 +128,9 @@ which is aligned with USD, MaterialX and OpenPBR:
    render service.
 5. **Isolation.** The renderer runs as a separate process; if it exits, the session ends and the
    document is untouched.
+6. **Other renderers.** A Hydra render delegate selected for a viewport or for final frames receives
+   the evaluated scene as a USD stage with incremental updates in its own host process
+   (MB-RENDER-022, [ADR-0007](../adr/0007-third-party-renderers-as-out-of-process-delegates.md)).
 
 Other Arc products publish Arc Scenes the same way; MeshBuilder consumes them as Arc Scene links
 (MB-ASSET-011) keyed by source element identifiers.

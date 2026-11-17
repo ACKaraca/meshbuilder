@@ -14,7 +14,7 @@ relationships), **edit** (native, editable result).
 | Arc Scene | data (linked, read-only) | data (render sessions, publishing) | Contract between Arc products and RenderBuilder | MB-ASSET-011, MB-RENDER-007 |
 | MaterialX (`.mtlx`) | edit | data | OpenPBR surfaces; Arc nodes expanded on write | MB-LOOK-025 |
 | glTF 2.0 (`.gltf`, `.glb`) | data | data | PBR mapped to and from OpenPBR; skins, morph targets, clips | MB-IO-009 |
-| FBX | data | data | Through an isolated bridge process | MB-IO-010 |
+| FBX | data | data | Open reader and writer in process; a user-licensed vendor library only in a separate bridge process | MB-IO-010, MB-CONNECT-019 |
 | OBJ / MTL | data | data | Materials approximated | MB-IO-011 |
 | Alembic (`.abc`) | data (streamed cache) | data | Geometry caches, cameras, transforms | MB-IO-018 |
 | PC2, MDD | data | data | Per-vertex animation on matching topology | MB-IO-019 |
@@ -29,10 +29,13 @@ relationships), **edit** (native, editable result).
 | IFC | data | — | Visualization with properties | MB-IO-017 |
 | Collada (`.dae`) | view | — | Legacy assets | MB-IO-013 |
 | Images (PNG, JPEG, TIFF, OpenEXR, HDR, KTX2) | data | data | Color space assigned on read; Ptex and UDIM sets supported | MB-LOOK-010, MB-PROJ-006 |
-| IES photometric | data | — | Light profiles | MB-LIGHT-004 |
+| Native scene files of other content-creation applications | data; edit where the host API allows | data; edit where the host API allows | Through connectors running in the host application, via the Arc exchange package | MB-CONNECT-001 to MB-CONNECT-022 |
+| Procedural material archives | data (published specification or open runtime; otherwise through a connector) | — | Mapped to MaterialX, unmapped nodes baked | MB-LOOK-027, MB-CONNECT-021 |
+| Other proprietary formats with an open reader (for example 3DM) | data | — | Behind an `arc-io-*` crate | MB-IO-026 |
+| IES photometric
 | BVH, C3D | data | data (BVH) | Motion and marker data | [24-motion-capture-and-retargeting](../product/capabilities/24-motion-capture-and-retargeting.md) |
-| OpenTimelineIO | — | data | Shot and edit lists | [22-keyframe-animation](../product/capabilities/22-keyframe-animation.md) |
-| Video (image sequences, common video codecs through platform libraries) | view (image planes) | view (captures) | | MB-VIEW-007, MB-RENDER-005 |
+| OpenTimelineIO, CMX-style edit lists | data | data | Edit sequences with speed changes and transitions | MB-ANIM-043, MB-COMP-013 |
+| Video (image sequences, common video codecs through platform libraries) | view (image planes), data (sequence clips) | view (captures, sequence renders) | | MB-VIEW-007, MB-RENDER-005, MB-COMP-002, MB-COMP-014 |
 | PNG, SVG (UV layout) | — | view | | MB-UV-026 |
 | OpenColorIO configurations | data | — | | MB-PROJ-001 |
 
@@ -50,6 +53,26 @@ relationships), **edit** (native, editable result).
 6. **Instances stay instances** on read and write where the format supports instancing.
 7. **The original file is kept** with the import record for re-mapping when the mapping improves.
 
+## Connectors and bridges
+
+Decision: [suite ADR-0017](https://github.com/ACKaraca/arc-suite/blob/main/docs/adr/0017-exchange-connectors-and-licensed-bridges.md).
+
+1. **Connectors run in the host.** A connector is an add-in inside the user's own licensed copy of
+   the other application. It uses only that application's public API and exchanges the Arc exchange
+   package ([specification](https://github.com/ACKaraca/arc-core/blob/main/docs/architecture/interchange.md)).
+   MeshBuilder reads and writes the package; it never reads the host's native file.
+2. **Content types carry their own mapping.** Hierarchy, meshes with modifiers baked or mapped,
+   materials, rigs, skinning, animation curves and layers, cameras and lights each map onto the
+   rows of their area, and the fidelity report names what the host API does not expose
+   (MB-CONNECT-004).
+3. **Identity survives round trips.** Host identifiers and document ids are kept in a connector link
+   so a repeated exchange updates and merges (MB-CONNECT-013, MB-CONNECT-014).
+4. **Live links use public APIs only.** Sessions follow the host's change notifications where it
+   offers them and revision differences otherwise (MB-CONNECT-016).
+5. **Open readers run in process, vendor libraries do not.** An open reader behind `arc-io-*` is
+   bounded and fuzzed like any importer; a licensed vendor library runs in a separate bridge process,
+   is never distributed with Arc and is never required (MB-CONNECT-019, MB-CONNECT-020).
+
 ## Validation
 
 - Every exporter is validated in CI by an independent reader: the Khronos glTF validator, the USD
@@ -57,6 +80,8 @@ relationships), **edit** (native, editable result).
   comparisons for OBJ, STL, PLY and 3MF.
 - Round-trip tests compare topology counts, attribute presence, transforms within tolerance and
   material parameters for each format with edit or data fidelity.
+- Connector exchange is tested against recorded exchange packages per host, with round-trip
+  comparisons of identifiers, transforms, topology counts, weights and curves.
 - Importers are fuzzed and bound recursion, allocation and element counts (MB-IO-007).
 - Fixture files come from the suite's corpus repositories with owner, license and checksum per file;
   no vendor sample files are used.
@@ -73,11 +98,13 @@ JSON by the CLI so pipelines can fail on unexpected losses.
 
 | Not supported | Reason | Exchange instead |
 |---|---|---|
-| Other applications' proprietary native scene files | No published specification; never reverse engineered | USD, FBX, Alembic, glTF exported from the source application |
-| Proprietary sculpt and paint formats | No published specification | OBJ or USD per subdivision level, OpenEXR or TIFF displacement and texture maps |
-| Closed procedural material archives requiring a proprietary runtime | No published specification, closed runtime | MaterialX plus baked textures |
-| Live connections into third-party engines or editors through their private protocols | Private protocols | USD and glTF files; the automation protocol for tool authors |
+| Reverse engineering undocumented formats or binaries, and running protected script files | The legal line: no published specification and no license to decode | Connectors, open readers, or USD, FBX, Alembic and glTF exported from the source application |
+| Proprietary sculpt and paint formats without a connector or open reader | No published specification | OBJ or USD per subdivision level, OpenEXR or TIFF displacement and texture maps |
+| Procedural material archives without a published specification or open runtime, outside a connector | Closed runtime | A connector in the owning application, or MaterialX plus baked textures |
+| Live connections through private protocols | Private protocols | Live link sessions through the host's public API (MB-CONNECT-016); the automation protocol for tool authors |
 | Native write of STEP, IGES, DXF, DWG, IFC | Outside the mesh domain; SolidBuilder, DraftBuilder and ArchBuilder own these | Arc Scene links in the opposite direction; OBJ, STL or glTF for mesh hand-off |
+| A vendor FBX library linked into the application | License policy and crash isolation | The open reader, or the separate bridge process |
 
-FBX is supported only through an out-of-process bridge so that no core workflow depends on it
+FBX is read and written in process through an open reader behind `arc-io-mesh`; a vendor library is
+used only through a separate, user-installed bridge process, so no core workflow depends on it
 ([ADR-0004](../adr/0004-fbx-through-isolated-bridge.md)).

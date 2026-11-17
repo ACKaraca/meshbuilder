@@ -12,7 +12,9 @@ painting, rigging, animation, motion-capture editing, simulation and scene assem
 document, one parallel evaluation graph and one procedural node system. Modifier stacks are a view of
 that graph, direct edits bind to stable component identities, scenes are assembled with OpenUSD, and
 materials are MaterialX graphs with OpenPBR surfaces. It is written in Rust, runs on Windows, macOS
-and Linux on any vendor's GPU, works offline without an account, and renders through RenderBuilder.
+and Linux on any vendor's GPU, works offline without an account, and renders through RenderBuilder or, out of process, through other Hydra renderers. Connectors
+exchange scenes with other content-creation applications, and a sequence editor and node
+compositor finish shots.
 
 ## Who it is for
 
@@ -53,6 +55,8 @@ pipeline technical directors who automate all of it. See [vision](docs/product/v
 | Rigid, cloth and hair dynamics | Rigid and soft bodies, cloth, grooming | [27](docs/product/capabilities/27-rigid-cloth-and-hair-dynamics.md) |
 | Particles, fluids and volumes | Particles, liquids, smoke, volumes | [28](docs/product/capabilities/28-particles-fluids-and-volumes.md) |
 | Motion graphics and crowds | Procedural instancing, falloffs, crowds | [29](docs/product/capabilities/29-motion-graphics-and-crowds.md) |
+| Application connectors | Exchange with other content-creation applications through connectors, live links, licensed bridges | [30](docs/product/capabilities/30-application-connectors.md) |
+| Sequencing, compositing and drawing | Sequence editor, pass compositor, drawing-based 2D animation | [31](docs/product/capabilities/31-sequencing-and-compositing.md) |
 
 ## How it fits in the suite
 
@@ -113,6 +117,7 @@ Details: [architecture overview](docs/architecture/overview.md),
 | M6 | 5 | Sculpting, texture painting and baking |
 | M7 | 5 | Motion capture, dynamics, effects and motion graphics |
 | M8 | 5 | Depth and scale: collaboration, plug-ins, advanced modeling |
+| M9 | 5 | Connectors, other renderers, sequencing and compositing |
 
 See the [roadmap](docs/roadmap.md).
 

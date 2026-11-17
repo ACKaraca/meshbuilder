@@ -38,12 +38,12 @@ what updates automatically and limits, precisely enough to implement and test.
 | [08-booleans-retopology-and-cleanup.md](08-booleans-retopology-and-cleanup.md) | TOPO | Booleans, reduction, remeshing, retopology, mesh checks | 27 |
 | [09-uv-editing.md](09-uv-editing.md) | UV | UV editor, projections, seams, unfolding, packing, texel density, UDIM | 26 |
 | [10-vertex-data-and-attributes.md](10-vertex-data-and-attributes.md) | ATTR | Attribute system, normals, colors, attribute paint and transfer | 20 |
-| [11-materials-and-look-development.md](11-materials-and-look-development.md) | LOOK | OpenPBR materials, MaterialX graphs, textures, assignment, libraries | 26 |
+| [11-materials-and-look-development.md](11-materials-and-look-development.md) | LOOK | OpenPBR materials, MaterialX graphs, textures, assignment, libraries, procedural material archives | 27 |
 | [12-lights-and-cameras.md](12-lights-and-cameras.md) | LIGHT | Lights, environments, light linking, physical cameras | 26 |
-| [13-rendering-integration.md](13-rendering-integration.md) | RENDER | Viewport rendering, capture, RenderBuilder integration, render setups and passes | 21 |
+| [13-rendering-integration.md](13-rendering-integration.md) | RENDER | Viewport rendering, capture, RenderBuilder integration, render setups and passes, third-party renderers through Hydra render delegates | 30 |
 | [14-scene-assembly-and-usd.md](14-scene-assembly-and-usd.md) | USD | USD stages, layers, composition, variants, publishing, validation | 24 |
 | [15-references-and-asset-management.md](15-references-and-asset-management.md) | ASSET | Document references, overrides, links to Arc products, libraries, paths, Hub | 24 |
-| [16-pipeline-interchange.md](16-pipeline-interchange.md) | IO | Import and export formats, conversion, loss reports, engine export | 25 |
+| [16-pipeline-interchange.md](16-pipeline-interchange.md) | IO | Import and export formats, conversion, loss reports, engine export, open readers | 26 |
 | [17-scripting-and-extensibility.md](17-scripting-and-extensibility.md) | SCRIPT | Commands, macros, automation protocol, Python, CLI, plug-ins, assistant | 18 |
 | [18-customization.md](18-customization.md) | CUSTOM | Workspaces, shortcuts, menus, preferences, accessibility, localization | 19 |
 | [19-color-management-and-project-settings.md](19-color-management-and-project-settings.md) | PROJ | OpenColorIO, units, time, projects, naming rules | 17 |
@@ -57,8 +57,10 @@ what updates automatically and limits, precisely enough to implement and test.
 | [27-rigid-cloth-and-hair-dynamics.md](27-rigid-cloth-and-hair-dynamics.md) | DYN | Rigid and soft bodies, cloth, grooming, hair simulation, forces | 52 |
 | [28-particles-fluids-and-volumes.md](28-particles-fluids-and-volumes.md) | FX | Particles, liquids, smoke and fire, granular, oceans, volume operations | 55 |
 | [29-motion-graphics-and-crowds.md](29-motion-graphics-and-crowds.md) | MOGRAPH | Procedural instancing networks, falloffs, text animation, crowds | 48 |
+| [30-application-connectors.md](30-application-connectors.md) | CONNECT | Exchange with native scene files and running sessions of other content-creation applications through connectors, round-trip identity, live links, licensed bridges | 22 |
+| [31-sequencing-and-compositing.md](31-sequencing-and-compositing.md) | COMP, DRAW2D | Video sequence editor, node compositor for render passes, drawing-based 2D animation in the 3D scene | 36 |
 
-Files 20 to 29 are written as a separate set; their row counts are listed as they stand.
+Files 20 to 31 are written as a separate set; their row counts are listed as they stand.
 
 ## Area boundaries
 
@@ -70,6 +72,15 @@ Files 20 to 29 are written as a separate set; their row counts are listed as the
   (SCULPT) use it with their own options. Texture painting is PAINT.
 - Simulation zones (MB-GRAPH-026) are the engine that DYN, FX and MOGRAPH build on.
 - Viewport capture (MB-RENDER-005) is the engine behind shot preview output in ANIM.
+- Connectors (CONNECT) carry scenes between MeshBuilder and other applications; file formats stay
+  in IO, and the mapping of each content type reuses the rows of its own area (rigging, skinning,
+  animation, materials, lights).
+- Third-party renderers (MB-RENDER-022 to MB-RENDER-030) extend RenderBuilder integration; passes
+  and settings stay in the render setup rows.
+- Scene shots and their preview output stay in ANIM; the sequence editor (COMP) edits and finishes
+  their output, and the compositor reads render passes (MB-RENDER-014).
+- Drawing objects (DRAW2D) store strokes as curve data (CURVE) and use the shared node engine for
+  stroke modifiers.
 - Retopology tools are specified in TOPO and used from the sculpting workspace; overlap with SCULPT
   retopology rows is tracked in [OQ-14](../open-questions.md).
 

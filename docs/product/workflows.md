@@ -259,3 +259,40 @@ identifiers.
 - The tool works identically against the desktop application and a headless session
   (MB-SCRIPT-006).
 - Opening a document that references the tool runs no code until the user acts (MB-SCRIPT-010).
+
+## W15. Round trip with another content-creation application
+
+1. Install the connector in the other application and export a character scene with its rig, skin
+   weights and animation as an exchange package (MB-CONNECT-022, MB-CONNECT-002).
+2. Import the package, review the fidelity report and edit the animation on a layer
+   (MB-CONNECT-001, MB-CONNECT-004, MB-CONNECT-011).
+3. Start a live link session, change a material in the host and see it update (MB-CONNECT-016).
+4. Export the edited scene back, and re-import a host-side change made meanwhile to a different
+   object (MB-CONNECT-002, MB-CONNECT-014).
+5. Render a frame through RenderBuilder and through an installed render delegate in two viewport
+   panes (MB-RENDER-024, MB-RENDER-025).
+
+**Acceptance**
+
+- Re-importing never duplicates objects; ids and names are unchanged (MB-CONNECT-013).
+- An object edited on both sides is listed and nothing is overwritten before the choice
+  (MB-CONNECT-014).
+- Killing the host application ends the live session with a message and leaves the document
+  unchanged (MB-CONNECT-017).
+- Killing the delegate process ends its session only (MB-RENDER-028).
+
+## W16. Finish a shot: sequence and composite
+
+1. Render a shot with passes through RenderBuilder (MB-RENDER-014, MB-RENDER-010).
+2. Build a compositing graph over the passes: grade, add depth-based defocus and an object matte
+   (MB-COMP-016, MB-COMP-017, MB-COMP-020, MB-COMP-021).
+3. Place the composite and two other shot clips in an edit sequence with a dissolve and an audio
+   track (MB-COMP-003, MB-COMP-005, MB-COMP-010, MB-COMP-023).
+4. Add a hand-drawn overlay animation on a plane in the scene (MB-DRAW2D-001, MB-DRAW2D-003).
+5. Render the sequence and export an edit list (MB-COMP-014, MB-COMP-013).
+
+**Acceptance**
+
+- Re-rendering the shot refreshes the composite and marks the clip until the sequence is
+  re-rendered (MB-COMP-016, MB-COMP-023).
+- The same sequence renders headless from the CLI with identical frames (MB-COMP-014).

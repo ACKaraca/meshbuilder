@@ -18,8 +18,11 @@ strategy. Suite-wide decisions are in the
 
 New crates are added only for a real second boundary. Expected triggers: a `meshbuilder-sim` crate
 when the first solver lands (solvers have their own numerical test suites and release cadence), and
-a device-input crate when live motion-capture devices need platform-specific code. The FBX bridge is
-a separate executable outside the main build ([ADR-0004](../adr/0004-fbx-through-isolated-bridge.md)).
+a device-input crate when live motion-capture devices need platform-specific code. The render
+delegate host ([ADR-0007](../adr/0007-third-party-renderers-as-out-of-process-delegates.md)) and any
+licensed conversion bridge ([ADR-0004](../adr/0004-fbx-through-isolated-bridge.md)) are separate
+executables outside the main build. Connectors live in the separate `arc-connectors` repository and
+exchange the Arc exchange package; they are not part of this workspace.
 
 ```mermaid
 graph TD
@@ -108,6 +111,10 @@ sequenceDiagram
 | Dense data storage | `meshbuilder-model` on `arc-doc` assets | Chunked content-addressed geometry and sculpt layers ([ADR-0006](../adr/0006-dense-geometry-as-chunked-assets.md)) |
 | USD stage host | `meshbuilder-io` | Stage objects, layer editing, native edit mapping ([scene and USD](scene-and-usd.md)) |
 | Render integration | `meshbuilder-io` on `arc-scene` | Arc Scene export and incremental streaming to RenderBuilder |
+| Render delegate hosting | `meshbuilder-io`, separate host executable | USD stage feed, IPC and shared-memory image return, watchdog ([ADR-0007](../adr/0007-third-party-renderers-as-out-of-process-delegates.md)) |
+| Connector exchange | `meshbuilder-io` | Exchange package mapping, connector links, round-trip merge, live link sessions (MB-CONNECT-001 to MB-CONNECT-022) |
+| Sequencer and compositor | `meshbuilder-model` on `arc-nodes` and `arc-doc` | Edit sequences, compositing graphs with tiled float evaluation and a per-frame cache; media decoding through platform libraries |
+| Drawing animation | `meshbuilder-model` | Stroke frames stored as chunked assets, stroke modifiers as graph nodes |
 | Retopology and UV solvers | `meshbuilder-model` | Unfold, pack, quad remesh; numerical code with dedicated tests |
 
 ## Threading and background work
@@ -120,7 +127,8 @@ sequenceDiagram
   attached as revision-tagged derived data.
 - GPU work (subdivision display, instancing, picking) is submitted by the viewport from evaluated
   data; no model state lives only on the GPU.
-- RenderBuilder and the FBX bridge are separate processes; their failure never affects the document.
+- RenderBuilder, render delegate hosts and licensed bridges are separate processes; their failure
+  never affects the document.
 
 ## Performance targets
 
@@ -156,6 +164,8 @@ Targets are verified by benchmark scenes in CI; regressions beyond 10 percent fa
 | Property tests | Randomized meshes through operation sequences: validity invariants, no panics, determinism |
 | Golden hashes | Evaluated geometry hashes of reference documents per frame, compared across thread counts and platforms |
 | Interchange round trips | Export and re-import through independent readers (glTF validator, USD reader, Alembic reader) with loss-report checks |
+| Connector exchange | Recorded exchange packages per host application, round-trip identity and merge scenarios, live link recovery on lost connections |
+| Delegate conformance | Reference scenes through each supported render delegate, crash and hang injection |
 | Fuzzing | Every importer, the document loader and the automation protocol parser |
 | Viewport image tests | Reference renders of display modes and overlays compared with tolerance |
 | Workflow tests | The [reference workflows](../product/workflows.md) scripted through the automation protocol, headless |
