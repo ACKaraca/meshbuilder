@@ -57,6 +57,7 @@ pipeline technical directors who automate all of it. See [vision](docs/product/v
 | Motion graphics and crowds | Procedural instancing, falloffs, crowds | [29](docs/product/capabilities/29-motion-graphics-and-crowds.md) |
 | Application connectors | Exchange with other content-creation applications through connectors, live links, licensed bridges | [30](docs/product/capabilities/30-application-connectors.md) |
 | Sequencing, compositing and drawing | Sequence editor, pass compositor, drawing-based 2D animation | [31](docs/product/capabilities/31-sequencing-and-compositing.md) |
+| Assistance | Optional assistance checked by the mesh, rig, stage and export checks | [32](docs/product/capabilities/32-assistance.md) |
 
 ## How it fits in the suite
 

@@ -59,6 +59,7 @@ what updates automatically and limits, precisely enough to implement and test.
 | [29-motion-graphics-and-crowds.md](29-motion-graphics-and-crowds.md) | MOGRAPH | Procedural instancing networks, falloffs, text animation, crowds | 48 |
 | [30-application-connectors.md](30-application-connectors.md) | CONNECT | Exchange with native scene files and running sessions of other content-creation applications through connectors, round-trip identity, live links, licensed bridges | 22 |
 | [31-sequencing-and-compositing.md](31-sequencing-and-compositing.md) | COMP, DRAW2D | Video sequence editor, node compositor for render passes, drawing-based 2D animation in the 3D scene | 36 |
+| [32-assistance.md](32-assistance.md) | ASSIST | Optional assistance: scene questions, mesh and stage problems, export readiness, retopology, unwrapping and weight proposals, motion cleanup, asset tagging and search, material assignment, rough meshes with provenance | 16 |
 
 Files 20 to 31 are written as a separate set; their row counts are listed as they stand.
 

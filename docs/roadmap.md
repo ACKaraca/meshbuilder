@@ -134,9 +134,13 @@ other Arc products and studio pipelines.
   to MB-ASSET-021
 - Scene: MB-SCENE-026, MB-SCENE-031, MB-SCENE-033; MB-PROJ-012, MB-PROJ-017
 - Scripting and customization: MB-SCRIPT-004, MB-SCRIPT-006 to MB-SCRIPT-009, MB-SCRIPT-011,
+  MB-SCRIPT-018,
   MB-CUSTOM-002 to MB-CUSTOM-004, MB-CUSTOM-006 to MB-CUSTOM-011, MB-CUSTOM-015, MB-CUSTOM-016
 - Viewport scale: MB-VIEW-008, MB-VIEW-009, MB-VIEW-015, MB-VIEW-017, MB-VIEW-025, MB-VIEW-027,
   MB-VIEW-030, MB-VIEW-032, MB-VIEW-038, MB-VIEW-041, MB-VIEW-043, MB-VIEW-044
+- Assistance: MB-ASSIST-001 to MB-ASSIST-004, MB-ASSIST-006 to MB-ASSIST-009, MB-ASSIST-011 to
+  MB-ASSIST-014, MB-ASSIST-016; these rows never gate the milestone: each is offered when its task
+  suite passes, through the suite assistant host in `arc-app`
 
 **Dependencies.** `arc-core`: `arc-io-usd` (stage hosting and layer editing), `arc-doc` (external
 references). Other products: ArchBuilder and SolidBuilder Arc Scene publishing.
@@ -190,7 +194,7 @@ MB-LIGHT-006, MB-LIGHT-015.
 **Goal.** Collaboration, sandboxed plug-ins and remaining advanced capabilities.
 
 **Scope.** MB-SCENE-034; MB-ASSET-010, MB-ASSET-014, MB-ASSET-022 to MB-ASSET-024; MB-SCRIPT-013 to
-MB-SCRIPT-018; MB-MOD-040; MB-GRAPH-031; MB-USD-013, MB-USD-018, MB-USD-023; MB-RENDER-011;
+MB-SCRIPT-017; MB-ASSIST-005, MB-ASSIST-010, MB-ASSIST-015; MB-MOD-040; MB-GRAPH-031; MB-USD-013, MB-USD-018, MB-USD-023; MB-RENDER-011;
 MB-VIEW-018; MB-CURVE-027 to MB-CURVE-029; MB-LIGHT-022, MB-LIGHT-025, MB-LIGHT-026.
 
 **Dependencies.** `arc-core`: `arc-hub-api` (versioning, production tracking, change sets, render

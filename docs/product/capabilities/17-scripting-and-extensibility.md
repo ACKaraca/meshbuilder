@@ -52,4 +52,4 @@ Python client, the headless CLI, sandboxed plug-ins, packages and the optional a
 
 | ID | Capability | Behavior | Tier | Phase |
 |---|---|---|---|---|
-| MB-SCRIPT-018 | Assistant panel | An optional assistant panel proposes command sequences from natural-language requests using a user-configured provider (including local models), shows a preview of the resulting changes, and applies them only after explicit confirmation. No document content leaves the machine without explicit action. | T3 | 5 |
+| MB-SCRIPT-018 | Assistant panel | An optional assistant panel proposes command sequences from natural-language requests using a user-configured provider (including local models), shows a preview of the resulting changes, and applies them only after explicit confirmation. No document content leaves the machine without explicit action. The assistance capabilities are in [32-assistance.md](32-assistance.md). | T3 | 4 |
